@@ -241,18 +241,16 @@ export default {
       );
     },
     selectTrack: function selectTrack(id) {
-      this.$set(this.player.currentTrack, 'player.currentTrack', id);
-      // this.player.currentTrack = Object.assign(
-      //  {},
-      //  this.player.currentTrack,
-      //  { currentTrack: id },
-      // );
-      this.$set(this.player.elapsed, 'player.elapsed', 0);
-      // this.player.elapsed = Object.assign(
-      //  {},
-      //  this.player.elapsed,
-      //  { elapsed: 0 },
-      // );
+      this.player.currentTrack = Object.assign(
+        {},
+        this.player.currentTrack,
+        { currentTrack: id },
+      );
+      this.player.elapsed = Object.assign(
+        {},
+        this.player.elapsed,
+        { elapsed: 0 },
+      );
       // this.play();
     },
     skipForward: function skipForward() {
