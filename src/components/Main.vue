@@ -239,10 +239,10 @@ export default {
     currentTrack: function currentTrack() {
       // test
       /* eslint no-console: ["error", { allow: ["warn", "error", "log"] }] */
-      console.log('-- test --');
-      console.log(this.player.currentTrack);
-      console.log(this.playlist.tracks[this.player.currentTrack]);
-      console.log(this.playlist.tracks);
+      // console.log('-- test --');
+      // console.log(this.player.currentTrack);
+      // console.log(this.playlist.tracks[this.player.currentTrack]);
+      // console.log(this.playlist.tracks);
 
       return this.playlist.tracks[this.player.currentTrack];
     },
