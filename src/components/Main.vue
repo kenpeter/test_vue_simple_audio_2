@@ -32,8 +32,93 @@
           </svg>
         </li>
       
+      
+        <!-- li -->
+        <li class="control control--outlined">
+          <!-- svg -->
+          <!-- class icon, viewbox -->
+          <!-- @click -->
+          <svg
+               class="icon"
+               viewbox="0 0 100 100"
+               @click="play"
+               v-if="!player.playing"
+          >
+              <use xlink:href="#play"></use>
+          </svg>
+          <svg
+               class="icon"
+               viewbox="0 0 100 100"
+               @click="pause"
+               v-if="player.playing"
+          >
+              <use xlink:href="#pause"></use>
+          </svg>
+        </li>
+        <li class="control" @click="skipForward">
+            <svg class="icon" viewbox="0 0 100 100">
+                <use xlink:href="#skip-forward"></use>
+            </svg>
+        </li>
+        <li
+            class="control control--small"
+            v-bind:class="{
+                'control--active' : player.shuffle,
+                'control--dimmed' : !player.shuffle
+            }"
+            @click="toggleShuffle"
+        >
+            <svg class="icon" viewbox="0 0 100 100">
+                <use xlink:href="#shuffle"></use>
+            </svg>
+        </li>
       </ul>
+      
+      <h1 class="player__title" v-text="currentTrack.title"></h1>
+      <h2 class="player__sub-title">{{currentTrack.album}} - {{currentTrack.artist}}</h2>
+      <div class="player__volume">
+        <div class="player__volume__icon">
+          <svg class="icon" viewbox="0 0 100 100">
+            <use xlink:href="#volume"></use>
+          </svg>
+        </div>
+        <div class="slider slider--volume player__volume__slider">
+          <input type="range" :value="player.volume" max="100" />
+        </div>
+      </div>
     </section>
+    
+    
+    <aside class="playlist">
+        <header class="playlist__header">
+            <h1 class="playlist__title" v-text="playlist.title"></h1>
+            <div class="playlist__info">
+                <a href="#" v-text="playlist.author"></a> - {{playlist.tracks.length}} songs, {{ playlistDuration }} min
+                <a href="#">
+                    <svg class="icon icon--inline" viewbox="0 0 100 100">
+                        <use xlink:href="#share"></use>
+                    </svg>
+                </a>
+            </div>
+        </header>
+        <ol class="playlist__list">
+            <li
+                class="playlist__track"
+                @click="selectTrack(index)"
+                v-bind:class="{'playlist__track--active': player.currentTrack === index}"
+                v-for="(track, index) in playlist.tracks"
+            >
+                <img :src="track.cover.small" class="playlist__track__cover" />
+                <div class="playlist__track__info">
+                    <h3 class="playlist__track__title" v-text="track.title"></h3>
+                    <span class="playlist__track__sub-title">{{track.album}} - {{track.artist}}</span>
+                </div>
+                <span class="playlist__track__time" v-text="track.duration"></span>
+            </li>
+        </ol>
+    </aside>
+    
+    
     
     <svg xmlns="http://www.w3.org/2000/svg" class="hide">
       <symbol id="play" viewBox="0 0 23.2 26.2">
@@ -84,7 +169,8 @@ export default {
         playing: false, // is it playing
         repeat: false, // is it repeat
         shuffle: true, // is it shuffle
-        volume: 68, // volumne .....
+        volume: 68, // volumne .....,
+        timer: false,
       }, // end player
       playlist: {
         title: 'Designers MX - Open Space', // title of the playlist
@@ -151,8 +237,13 @@ export default {
     // current track is the current track obj
     // it is a func, but return value
     currentTrack: function currentTrack() {
-      // this, playlist, tracks
-      // this.player.currentTrack === index
+      // test
+      /* eslint no-console: ["error", { allow: ["warn", "error", "log"] }] */
+      console.log('-- test --');
+      console.log(this.player.currentTrack);
+      console.log(this.playlist.tracks[this.player.currentTrack]);
+      console.log(this.playlist.tracks);
+
       return this.playlist.tracks[this.player.currentTrack];
     },
     playlistDuration: function playlistDuration() {
@@ -182,20 +273,19 @@ export default {
         // not playing, so good
         return;
       }
-      // this
-      // dollar set
-      // player.playing, false
-      // it seems that is how you set variable
-      this.$set('player.playing', false);
-      // clean interval
-      // this
-      // .timer
+      // this.$set('player.playing', false);
+      this.player = Object.assign(
+        {},
+        this.player,
+        { playing: false },
+      );
       clearInterval(this.timer);
-      // this
-      // $set
-      // timer
-      // false
-      this.$set('timer', false);
+      // this.$set('timer', false);
+      this.player = Object.assign(
+        {},
+        this.player,
+        { timer: false },
+      );
     },
     play: function play() {
       if (this.player.playing) {
@@ -216,42 +306,42 @@ export default {
         // it has a single track
         // so can use .duration
         if (that.player.elapsed >= that.currentTrack.duration) {
-          // this
-          // $set
-          // player.elapsed
-          // 0
-          // so song pass enough, so player.elapsed
-          this.$set('player.elapsed', 0);
+          // this.$set('player.elapsed', 0);
+          this.player = Object.assign(
+            {},
+            this.player,
+            { elapsed: 0 },
+          );
           // need to forward
-          // that.skipForward();
+          that.skipForward();
         }
         that.player.elapsed += 0.1;
       }, 100);
       // this.$set('player.playing', true);
-      this.player.playing = Object.assign(
+      this.player = Object.assign(
         {},
-        this.player.playing,
+        this.player,
         { playing: true },
       );
       // this.$set('timer', timer);
-      this.player.timer = Object.assign(
+      this.player = Object.assign(
         {},
-        this.player.timer,
+        this.player,
         { timer },
       );
     },
     selectTrack: function selectTrack(id) {
-      this.player.currentTrack = Object.assign(
+      this.player = Object.assign(
         {},
-        this.player.currentTrack,
+        this.player,
         { currentTrack: id },
       );
-      this.player.elapsed = Object.assign(
+      this.player = Object.assign(
         {},
-        this.player.elapsed,
+        this.player,
         { elapsed: 0 },
       );
-      // this.play();
+      this.play();
     },
     skipForward: function skipForward() {
       // let track

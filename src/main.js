@@ -10,6 +10,7 @@ Vue.config.productionTip = false;
 // filter
 // time
 // function
+/*
 Vue.filter('time', (seconds) => {
   // var min
   // math
@@ -30,13 +31,16 @@ Vue.filter('time', (seconds) => {
   // else just return
   return `${minutes} : ${mySec}`;
 });
+*/
 
+/*
 // vue filter
 // format
 Vue.filter('minutes', (seconds) => {
   const minutes = Math.floor(seconds / 60);
   return minutes;
 });
+*/
 
 /* eslint-disable no-new */
 new Vue({
